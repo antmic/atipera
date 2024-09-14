@@ -1,0 +1,91 @@
+<!-- TODO: handle scientific notation -->
+<div class="dialog-wrapper">
+  <h1 mat-dialog-title>{{ data.isNew ? "Add Element" : "Edit Element" }}</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Position</mat-label>
+      <input
+        matInput
+        [(ngModel)]="data.position"
+        type="number"
+        min="1"
+        required
+        pattern="[0-9]*"
+        #positionInput="ngModel"
+      />
+      <mat-error *ngIf="positionInput.errors?.['min']">
+        Position must be at least 1
+      </mat-error>
+      <mat-error *ngIf="positionInput.errors?.['pattern']">
+        Position must be an integer
+      </mat-error>
+      <mat-error *ngIf="positionInput.errors?.['required']">
+        Position is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        [(ngModel)]="data.name"
+        pattern="^[a-zA-Z]+$"
+        #nameInput="ngModel"
+        required
+      />
+      <mat-error *ngIf="nameInput.errors?.['pattern']">
+        Name must contain only letters
+      </mat-error>
+      <mat-error *ngIf="nameInput.errors?.['required']">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Weight</mat-label>
+      <input
+        matInput
+        [(ngModel)]="data.weight"
+        type="number"
+        min="0"
+        required
+        #weightInput="ngModel"
+      />
+      <mat-error *ngIf="weightInput.errors?.['min']">
+        Weight can't be negative
+      </mat-error>
+      <mat-error *ngIf="weightInput.errors?.['required']">
+        Weight is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Symbol</mat-label>
+      <input
+        matInput
+        [(ngModel)]="data.symbol"
+        pattern="^[a-zA-Z]+$"
+        #symbolInput="ngModel"
+        required
+      />
+      <mat-error *ngIf="symbolInput.errors?.['pattern']">
+        Symbol must contain only letters
+      </mat-error>
+      <mat-error *ngIf="symbolInput.errors?.['required']">
+        Symbol is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="dialog-actions" mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button
+      mat-button
+      [disabled]="
+        !positionInput.valid ||
+        !nameInput.valid ||
+        !weightInput.valid ||
+        !symbolInput.valid
+      "
+      (click)="onSaveClick()"
+    >
+      Save
+    </button>
+  </div>
+</div>

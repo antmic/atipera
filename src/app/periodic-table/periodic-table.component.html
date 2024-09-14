@@ -1,0 +1,87 @@
+<main>
+  <div class="top-bar">
+    <mat-form-field class="search-bar">
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        (input)="applyFilter($event)"
+        placeholder="Filter"
+        #filterInput
+      />
+      <button
+        class="clear-button"
+        mat-icon-button
+        matSuffix
+        *ngIf="filterInput.value"
+        (click)="clearFilter(filterInput)"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="buttons">
+      <button mat-button color="primary" (click)="addElement()">
+        <mat-icon>add</mat-icon><span class="desktop-view">Add Element</span>
+      </button>
+      <button mat-button color="accent" (click)="saveData()">
+        <mat-icon>save</mat-icon><span class="desktop-view">Save</span>
+      </button>
+      <button mat-button color="warn" (click)="resetData()">
+        <mat-icon>refresh</mat-icon><span class="desktop-view">Reset</span>
+      </button>
+      <button
+        class="round-button"
+        mat-icon-button
+        (click)="undo()"
+        [disabled]="history.length === 0"
+      >
+        <mat-icon>undo</mat-icon>
+      </button>
+      <button
+        class="round-button"
+        mat-icon-button
+        (click)="redo()"
+        [disabled]="future.length === 0"
+      >
+        <mat-icon>redo</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef>Weight</th>
+      <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+    </ng-container>
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef>Symbol</th>
+      <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="table-buttons">
+          <button mat-icon-button (click)="editElement(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeElement(element.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</main>
