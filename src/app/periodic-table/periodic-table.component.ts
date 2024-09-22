@@ -7,9 +7,9 @@ import { ELEMENT_DATA } from '../data/element-data';
 import { EditElementDialog } from '../edit-element-dialog/edit-element-dialog.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID library
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { ConfirmActionDialogComponent } from '../confirm-action-dialog/confirm-action-dialog.component'; // Import ConfirmActionDialogComponent
+import { v4 as uuidv4 } from 'uuid';
+import { CommonModule } from '@angular/common';
+import { ConfirmActionDialogComponent } from '../confirm-action-dialog/confirm-action-dialog.component';
 
 @Component({
   selector: 'app-periodic-table',
@@ -83,7 +83,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.updateState(); // Update state before making changes
+        this.updateState();
         const index = this.dataSource.data.findIndex((e) => e.id === result.id);
         const updatedData = [...this.dataSource.data];
         updatedData[index] = result;
@@ -108,7 +108,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.updateState(); // Update state before making changes
+        this.updateState();
         const updatedData = [...this.dataSource.data, result];
         this.dataSource.data = this.sortElements(updatedData);
         this.saveData();
@@ -124,7 +124,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.updateState(); // Update state before making changes
+        this.updateState();
         const updatedData = this.dataSource.data.filter(
           (element) => element.id !== id
         );
@@ -162,8 +162,8 @@ export class PeriodicTableComponent implements OnInit {
             id: uuidv4(),
           }))
         );
-        this.history = []; // Clear the history stack
-        this.future = []; // Clear the future stack
+        this.history = [];
+        this.future = [];
       }
     });
   }
