@@ -44,6 +44,7 @@ export class PeriodicTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadState();
     this.dataSource.filterPredicate = this.createFilter();
   }
 
@@ -82,7 +83,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.saveState(); // Save state before making changes
+        this.updateState(); // Update state before making changes
         const index = this.dataSource.data.findIndex((e) => e.id === result.id);
         const updatedData = [...this.dataSource.data];
         updatedData[index] = result;
@@ -107,7 +108,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.saveState(); // Save state before making changes
+        this.updateState(); // Update state before making changes
         const updatedData = [...this.dataSource.data, result];
         this.dataSource.data = this.sortElements(updatedData);
         this.saveData();
@@ -123,7 +124,7 @@ export class PeriodicTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.saveState(); // Save state before making changes
+        this.updateState(); // Update state before making changes
         const updatedData = this.dataSource.data.filter(
           (element) => element.id !== id
         );
@@ -138,6 +139,12 @@ export class PeriodicTableComponent implements OnInit {
       'periodicTableData',
       JSON.stringify(this.dataSource.data)
     );
+  }
+
+  // Mock function to push data to the server
+  pushDataToServer() {
+    this.saveData();
+    // would push this.dataSource.data to the server
   }
 
   resetData() {
@@ -186,8 +193,26 @@ export class PeriodicTableComponent implements OnInit {
 
   // Save the current state to the history stack
   private saveState() {
+    localStorage.setItem('periodicStateHistory', JSON.stringify(this.history));
+    localStorage.setItem('periodicStateFuture', JSON.stringify(this.future));
+  }
+
+  private updateState() {
     this.history.push([...this.dataSource.data]);
     this.future = []; // Clear the future stack
+    this.saveState();
+  }
+
+  // Load the state from the history stack
+  private loadState() {
+    const savedHistory = localStorage.getItem('periodicStateHistory');
+    if (savedHistory) {
+      this.history = JSON.parse(savedHistory);
+    }
+    const savedFuture = localStorage.getItem('periodicStateFuture');
+    if (savedFuture) {
+      this.future = JSON.parse(savedFuture);
+    }
   }
 
   // Undo the last change
@@ -196,6 +221,7 @@ export class PeriodicTableComponent implements OnInit {
       this.future.push([...this.dataSource.data]);
       this.dataSource.data = this.history.pop()!;
       this.saveData();
+      this.saveState();
     }
   }
 
@@ -205,6 +231,7 @@ export class PeriodicTableComponent implements OnInit {
       this.history.push([...this.dataSource.data]);
       this.dataSource.data = this.future.pop()!;
       this.saveData();
+      this.saveState();
     }
   }
 }
